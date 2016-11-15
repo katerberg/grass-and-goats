@@ -5,29 +5,10 @@
   app.use(express.static('public'));
   const http = require('http').Server(app);
   const io = require('socket.io')(http);
+  const World = require('./world');
   const port = process.env.PORT || 3000;
 
-  const world = {
-    age: 0,
-    board: buildWorld(30),
-    watchers: [],
-    checkForGrowth: function() {
-      const result = [];
-      world.board.forEach(function(row) {
-        row.forEach(function(cell) {
-          const neighbors = numberOfGrassNeighbors(world.board, cell.x, cell.y);
-          if (!cell.grass && Math.random() <  neighbors * 0.05) {
-            result.push(cell);
-          }
-        });
-      });
-      result.forEach(function(cell) {
-        cell.grass = 1;
-        world.board[cell.x][cell.y].grass = 1;
-      });
-      return result;
-    }
-  };
+  const world = new World(30);
 
   app.get('/', function(req, res) {
     console.log('got called on base');
@@ -36,30 +17,13 @@
 
   app.get('/age', function(req, res) {
     console.log('requesting age');
-    res.send(world.age);
+    res.send(world.age + '');
   });
 
   app.get('/world', function(req, res) {
     console.log('requesting world');
     res.send(world.board);
   });
-
-  function numberOfGrassNeighbors(board, cellX, cellY) {
-    let result = 0;
-    if (cellX !== 0) {
-      result += board[cellX - 1][cellY].grass;
-    }
-    if (cellX !== board.length - 1) {
-      result += board[cellX + 1][cellY].grass;
-    }
-    if (cellY !== 0) {
-      result += board[cellX][cellY - 1].grass;
-    }
-    if (cellY !== board[cellX].length - 1) {
-      result += board[cellX][cellY + 1].grass;
-    }
-    return result;
-  }
 
   function tick(socket) {
     world.age++;
@@ -75,11 +39,6 @@
     if (!world.age) {
       tick();
     }
-  }
-
-  function randomIntFromInterval(min,max)
-  {
-    return Math.floor(Math.random()*(max-min+1)+min);
   }
   
   function buildWorld(boardSize) {
