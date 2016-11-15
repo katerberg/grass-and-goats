@@ -4,9 +4,15 @@
   var socket = io();
 
   console.log('setting up listener ' + socket.id);
-  socket.on('tick', function(msg) {
-    console.log('ticked: ' + msg);
-    $('#tick').html(msg);
+  socket.on('tick', function(worldChanges) {
+    console.log('ticked');
+    worldChanges.forEach(function(change) {
+      var row = $($('#board').children()[change.x]);
+      $(row.children()[change.y]).addClass('green');
+    });
+    if (worldChanges) {
+      console.log(worldChanges);
+    }
   });
 
   function buildRow(row) {

@@ -9,9 +9,23 @@
 
   const world = {
     age: 0,
-    board: buildWorld(),
+    board: buildWorld(30),
     watchers: [],
     checkForGrowth: function() {
+      const result = [];
+      world.board.forEach(function(row) {
+        row.forEach(function(cell) {
+          const neighbors = numberOfGrassNeighbors(world.board, cell.x, cell.y);
+          if (!cell.grass && Math.random() <  neighbors * 0.05) {
+            result.push(cell);
+          }
+        });
+      });
+      result.forEach(function(cell) {
+        cell.grass = 1;
+        world.board[cell.x][cell.y].grass = 1;
+      });
+      return result;
     }
   };
 
@@ -30,13 +44,29 @@
     res.send(world.board);
   });
 
+  function numberOfGrassNeighbors(board, cellX, cellY) {
+    let result = 0;
+    if (cellX !== 0) {
+      result += board[cellX - 1][cellY].grass;
+    }
+    if (cellX !== board.length - 1) {
+      result += board[cellX + 1][cellY].grass;
+    }
+    if (cellY !== 0) {
+      result += board[cellX][cellY - 1].grass;
+    }
+    if (cellY !== board[cellX].length - 1) {
+      result += board[cellX][cellY + 1].grass;
+    }
+    return result;
+  }
+
   function tick(socket) {
     world.age++;
-    console.log('tick: ' + world.age);
+    const growthDelta = world.checkForGrowth();
     world.watchers.forEach(function(watcher) {
-      watcher.emit('tick', world.age);
+      watcher.emit('tick', growthDelta);
     });
-    const worldDelta = world.checkForGrowth();
     setTimeout(tick, 1000);
   }
 
@@ -52,16 +82,20 @@
     return Math.floor(Math.random()*(max-min+1)+min);
   }
   
-  function buildWorld() {
+  function buildWorld(boardSize) {
     const board = [];
-    for (let i = 0; i < 10; i++) {
+    for (let x = 0; x < boardSize; x++) {
       board.push([]);
-      for (let j = 0; j < 10; j++) {
-        board[i].push({grass: 0});
+      for (let y = 0; y < boardSize; y++) {
+        board[x].push({
+          grass: 0,
+          x: x,
+          y: y,
+        });
       }
     }
-    const startX = randomIntFromInterval(0, 9),
-      startY = randomIntFromInterval(0, 9);
+    const startX = randomIntFromInterval(0, boardSize - 1),
+      startY = randomIntFromInterval(0, boardSize - 1);
     board[startX][startY].grass = 1;
     return board;
   }
@@ -69,102 +103,6 @@
   io.on('connection', function(socket) {
       console.log('new connection ' + socket.id);
       kickoffTicker(socket);
-      buildWorld();
-
-  //     socket.on('login', function(userId) {
-  //         console.log(userId + ' joining lobby');
-  //         socket.userId = userId;  
-       
-  //         if (!users[userId]) {    
-  //             console.log('creating new user');
-  //             users[userId] = {userId: socket.userId, games:{}};
-  //         } else {
-  //             console.log('user found!');
-  //             Object.keys(users[userId].games).forEach(function(gameId) {
-  //                 console.log('gameid - ' + gameId);
-  //             });
-  //         }
-          
-  //         socket.emit('login', {users: Object.keys(lobbyUsers), 
-  //                               games: Object.keys(users[userId].games)});
-  //         lobbyUsers[userId] = socket;
-          
-  //         socket.broadcast.emit('joinlobby', socket.userId);
-  //     });
-      
-  //     socket.on('invite', function(opponentId) {
-  //         console.log('got an invite from: ' + socket.userId + ' --> ' + opponentId);
-          
-  //         socket.broadcast.emit('leavelobby', socket.userId);
-  //         socket.broadcast.emit('leavelobby', opponentId);
-        
-         
-  //         var game = {
-  //             id: Math.floor((Math.random() * 100) + 1),
-  //             board: null, 
-  //             users: {white: socket.userId, black: opponentId}
-  //         };
-          
-  //         socket.gameId = game.id;
-  //         activeGames[game.id] = game;
-          
-  //         users[game.users.white].games[game.id] = game.id;
-  //         users[game.users.black].games[game.id] = game.id;
-    
-  //         console.log('starting game: ' + game.id);
-  //         lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
-  //         lobbyUsers[game.users.black].emit('joingame', {game: game, color: 'black'});
-          
-  //         delete lobbyUsers[game.users.white];
-  //         delete lobbyUsers[game.users.black];   
-          
-  //         socket.broadcast.emit('gameadd', {gameId: game.id, gameState:game});
-  //     });
-      
-  //      socket.on('resumegame', function(gameId) {
-  //         console.log('ready to resume game: ' + gameId);
-           
-  //         socket.gameId = gameId;
-  //         var game = activeGames[gameId];
-          
-  //         users[game.users.white].games[game.id] = game.id;
-  //         users[game.users.black].games[game.id] = game.id;
-    
-  //         console.log('resuming game: ' + game.id);
-  //         if (lobbyUsers[game.users.white]) {
-  //             lobbyUsers[game.users.white].emit('joingame', {game: game, color: 'white'});
-  //             delete lobbyUsers[game.users.white];
-  //         }
-          
-  //         if (lobbyUsers[game.users.black]) {
-  //             lobbyUsers[game.users.black] && 
-  //             lobbyUsers[game.users.black].emit('joingame', {game: game, color: 'black'});
-  //             delete lobbyUsers[game.users.black];  
-  //         }
-  //     });
-      
-  //     socket.on('move', function(msg) {
-  //         socket.broadcast.emit('move', msg);
-  //         activeGames[msg.gameId].board = msg.board;
-  //         console.log(msg);
-  //     });
-      
-  //     socket.on('disconnect', function(msg) {
-          
-  //       console.log(msg);
-        
-  //       if (socket && socket.userId && socket.gameId) {
-  //         console.log(socket.userId + ' disconnected');
-  //         console.log(socket.gameId + ' disconnected');
-  //       }
-        
-  //       delete lobbyUsers[socket.userId];
-        
-  //       socket.broadcast.emit('logout', {
-  //         userId: socket.userId,
-  //         gameId: socket.gameId
-  //       });
-  //     });
   });
 
   http.listen(port, function() {
