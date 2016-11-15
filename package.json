@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "node node_modules/nodemon/bin/nodemon.js app.js",
-    "prestart": "cp node_modules/socket.io-client/socket.io.js public/lib/ && cp node_modules/jquery/dist/jquery.slim.min.js public/lib/jquery.js"
+    "prestart": "cp node_modules/socket.io-client/socket.io.js public/lib/ && cp node_modules/jquery/dist/jquery.min.js public/lib/jquery.js"
   },
   "dependencies": {
     "express": "^4.14.0",

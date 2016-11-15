@@ -1,0 +1,16 @@
+#board > .row {
+  margin: 0;
+  padding: 0;
+  height: 1em;
+}
+#board > .row > .cell {
+  width: 1em;
+  height: 1em;
+  border: 1px solid black;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+#board > .row > .cell.green {
+  background-color: #ccc;
+}
