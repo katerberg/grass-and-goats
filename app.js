@@ -40,24 +40,6 @@
       tick();
     }
   }
-  
-  function buildWorld(boardSize) {
-    const board = [];
-    for (let x = 0; x < boardSize; x++) {
-      board.push([]);
-      for (let y = 0; y < boardSize; y++) {
-        board[x].push({
-          grass: 0,
-          x: x,
-          y: y,
-        });
-      }
-    }
-    const startX = randomIntFromInterval(0, boardSize - 1),
-      startY = randomIntFromInterval(0, boardSize - 1);
-    board[startX][startY].grass = 1;
-    return board;
-  }
 
   io.on('connection', function(socket) {
       console.log('new connection ' + socket.id);
