@@ -7,18 +7,25 @@
   socket.on('tick', function(worldChanges) {
     worldChanges.forEach(function(change) {
       var row = $($('#board').children()[change.x]);
-      $(row.children()[change.y]).addClass('green');
+      $(row.children()[change.y]).css('background-color', getBackgroundColor(change.grass));
     });
   });
+  
+  function getBackgroundColor(grass) {
+    var depth = 255 * Math.abs(1 - grass);
+    return 'rgb(' +
+      depth + ',' + depth + ',' + depth +
+      ')';
+  }
 
   function buildRow(row) {
     var domRow = '<div class="row">';
     row.forEach(function(cell) {
-      domRow += '<div class="cell';
+      domRow += '<div class="cell"';
       if (cell.grass) {
-        domRow += ' green';
+        domRow += 'style="background-color: ' + getBackgroundColor(cell.grass) + '";';
       }
-      domRow += '"></div>';
+      domRow += '></div>';
     });
     domRow += '</div>';
     return domRow;
