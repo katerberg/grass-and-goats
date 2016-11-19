@@ -51,13 +51,13 @@ class World {
     const result = [];
     this.board.forEach(row => row.forEach(cell => {
       const neighbors = numberOfGrassNeighbors(this.board, cell.x, cell.y);
-      if (!cell.grass && Math.random() < neighbors * 0.05) {
+      if (cell.grass <= 0.95 && Math.random() < neighbors * 0.1) {
         result.push(cell);
       }
     }));
     result.forEach(cell => {
-      cell.grass = 1;
-      this.board[cell.x][cell.y].grass = 1;
+      cell.grass += 0.05;
+      this.board[cell.x][cell.y].grass = cell.grass;
     });
     return result;
   }

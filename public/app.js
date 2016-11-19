@@ -12,7 +12,7 @@
   });
   
   function getBackgroundColor(grass) {
-    var depth = 255 * Math.abs(1 - grass);
+    var depth = Math.floor(255 * Math.abs(1 - grass));
     return 'rgb(' +
       depth + ',' + depth + ',' + depth +
       ')';
