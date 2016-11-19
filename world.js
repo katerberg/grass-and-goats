@@ -50,13 +50,27 @@ class World {
   checkForGrowth() {
     const result = [];
     this.board.forEach(row => row.forEach(cell => {
-      const neighbors = numberOfGrassNeighbors(this.board, cell.x, cell.y);
-      if (cell.grass <= 0.95 && Math.random() < neighbors * 0.1) {
-        result.push(cell);
+      cell.neighbors = numberOfGrassNeighbors(this.board, cell.x, cell.y);
+      if (cell.grass < 0.95) {
+        cell.push = {};
+        if (Math.random() < cell.neighbors * 0.1) {
+          cell.push.spread = true;
+        }
+        if (cell.grass !== 0) {
+          cell.push.grow = true;
+        }
+        if (Object.keys(cell.push).length) {
+          result.push(cell);
+        }
       }
     }));
     result.forEach(cell => {
-      cell.grass += 0.05;
+      if (cell.push.spread) {
+        cell.grass += 0.1;
+      }
+      if (cell.push.grow) {
+        cell.grass += (0.05 - 0.01 * cell.neighbors);
+      }
       this.board[cell.x][cell.y].grass = cell.grass;
     });
     return result;
