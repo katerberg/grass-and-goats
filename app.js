@@ -22,12 +22,12 @@
 
   app.get('/world', function(req, res) {
     console.log('requesting world');
-    res.send(world.board);
+    res.send(world.board.cells);
   });
 
   function tick(socket) {
     world.age++;
-    const growthDelta = world.checkForGrowth();
+    const growthDelta = world.tick();
     world.watchers.forEach(function(watcher) {
       watcher.emit('tick', growthDelta);
     });

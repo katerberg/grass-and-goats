@@ -1,56 +1,18 @@
 'use strict';
+var Board = require('./board');
 
-function randomIntFromInterval(min,max)
-{
-  return Math.floor(Math.random()*(max-min+1)+min);
-}
-
-function numberOfGrassNeighbors(board, cellX, cellY) {
-  let result = 0;
-  if (cellX !== 0) {
-    result += board[cellX - 1][cellY].grass;
-  }
-  if (cellX !== board.length - 1) {
-    result += board[cellX + 1][cellY].grass;
-  }
-  if (cellY !== 0) {
-    result += board[cellX][cellY - 1].grass;
-  }
-  if (cellY !== board[cellX].length - 1) {
-    result += board[cellX][cellY + 1].grass;
-  }
-  return result;
-}
-
-function buildWorld(boardSize) {
-  const board = [];
-  for (let x = 0; x < boardSize; x++) {
-    board.push([]);
-    for (let y = 0; y < boardSize; y++) {
-      board[x].push({
-        grass: 0,
-        x: x,
-        y: y,
-      });
-    }
-  }
-  const startX = randomIntFromInterval(0, boardSize - 1),
-    startY = randomIntFromInterval(0, boardSize - 1);
-  board[startX][startY].grass = 1;
-  return board;
-}
 
 class World {
   constructor (size) {
     this.age = 0;
     this.watchers = [];
-    this.board = buildWorld(size);
+    this.board = new Board(size);
   }
 
-  checkForGrowth() {
+  tick() {
     const result = [];
-    this.board.forEach(row => row.forEach(cell => {
-      cell.neighbors = numberOfGrassNeighbors(this.board, cell.x, cell.y);
+    this.board.cells.forEach(row => row.forEach(cell => {
+      cell.neighbors = this.board.numberOfGrassNeighbors(cell.x, cell.y);
       if (cell.grass < 0.95) {
         cell.push = {};
         if (Math.random() < cell.neighbors * 0.1) {
@@ -71,7 +33,7 @@ class World {
       if (cell.push.grow) {
         cell.grass += (0.05 - 0.01 * cell.neighbors);
       }
-      this.board[cell.x][cell.y].grass = cell.grass;
+      this.board.cells[cell.x][cell.y].grass = cell.grass;
     });
     return result;
   }

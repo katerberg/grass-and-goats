@@ -3,7 +3,6 @@
 
   var socket = io();
 
-  console.log('setting up listener ' + socket.id);
   socket.on('tick', function(worldChanges) {
     worldChanges.forEach(function(change) {
       var row = $($('#board').children()[change.x]);
