@@ -22,7 +22,7 @@ class Cell {
   }
 
   naturalGrowth(neighbors) {
-    let growth = (0.01 + Math.random()) * 0.05;
+    let growth = (0.01 + Math.random()) * 0.045;
     let overpopulation = this.grassSurrounding(neighbors) * 0.01;
     return growth - overpopulation;
   }
