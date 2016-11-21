@@ -26,10 +26,8 @@
   });
 
   function tick(socket) {
-    world.age++;
-    const growthDelta = world.tick();
     world.watchers.forEach(function(watcher) {
-      watcher.emit('tick', growthDelta);
+      watcher.emit('tick', world.tick());
     });
     setTimeout(tick, 1000);
   }
