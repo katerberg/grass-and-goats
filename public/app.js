@@ -30,10 +30,13 @@
     return domRow;
   }
 
-  $.ajax('/world').then(function(response) {
-    var $board = $('#board');
-    response.forEach(function addRow(row) {
-      $board.append(buildRow(row));
+  socket.on('connect', function() {
+    $.ajax('/world').then(function(response) {
+      var $board = $('#board');
+      $board.html('');
+      response.forEach(function addRow(row) {
+        $board.append(buildRow(row));
+      });
     });
   });
 })();
