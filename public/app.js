@@ -6,7 +6,7 @@
   socket.on('tick', function(worldChanges) {
     worldChanges.forEach(function(change) {
       var row = $($('#board').children()[change.x]);
-      $(row.children()[change.y]).css('background-color', getBackgroundColor(change.grass.state));
+      $(row.children()[change.y]).css('background-color', getBackgroundColor(change.grass));
     });
   });
   
@@ -21,10 +21,11 @@
     var domRow = '<div class="row">';
     row.forEach(function(cell) {
       domRow += '<div class="cell"';
-      if (cell.grass.state) {
-        domRow += 'style="background-color: ' + getBackgroundColor(cell.grass.state) + '";';
+      if (cell.grass) {
+        domRow += 'style="background-color: ' + getBackgroundColor(cell.grass) + '";';
       }
-      domRow += '></div>';
+      domRow += '>';
+      domRow += '</div>';
     });
     domRow += '</div>';
     return domRow;

@@ -25,17 +25,21 @@
     res.send(world.board.cells);
   });
 
-  function tick(socket) {
+  function tick(ageUntil) {
     world.watchers.forEach(function(watcher) {
       watcher.emit('tick', world.tick());
     });
-    setTimeout(tick, 1000);
+    if (world.age < ageUntil) {
+      tick(ageUntil);
+    } else {
+      setTimeout(tick, 1000);
+    }
   }
 
   function kickoffTicker(socket) {
     world.watchers.push(socket);
     if (!world.age) {
-      tick();
+      tick(500);
     }
   }
 

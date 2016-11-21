@@ -11,7 +11,6 @@ class World {
 
   tick() {
     this.age++;
-    const result = [];
     return this.board.growGrass();
   }
 }
