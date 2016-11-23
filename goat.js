@@ -7,8 +7,15 @@ class Goat {
       x: x,
       y: y,
     };
+    this.stomach = 0;
     this.formerPosition = {};
     this.constraint = constraint;
+  }
+
+  eat(cell) {
+    this.stomach += cell.grass;
+    console.log(`goat has eaten ${this.stomach}`);
+    cell.grass = 0;
   }
 
   move() {

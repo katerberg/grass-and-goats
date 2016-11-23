@@ -6,6 +6,8 @@ const Random = require('./random');
 
 class Board {
   constructor (boardSize) {
+    this.startX = Random.intFromInterval(0, boardSize - 1);
+    this.startY = Random.intFromInterval(0, boardSize - 1);
     this.goats = [];
     this.cells = [];
     for (let x = 0; x < boardSize; x++) {
@@ -14,21 +16,22 @@ class Board {
         this.cells[x].push(new Cell(x, y));
       }
     }
-    const startX = Random.intFromInterval(0, boardSize - 1),
-      startY = Random.intFromInterval(0, boardSize - 1);
-    console.log(`Starting grass at ${startX},${startY}`);
-    this.cells[startX][startY].grass = 1;
+    console.log(`Starting grass at ${this.startX},${this.startY}`);
+    this.cells[this.startX][this.startY].grass = 1;
   }
 
-  spawnGoat() {
-    const startX = Random.intFromInterval(0, this.cells.length - 1),
-      startY = Random.intFromInterval(0, this.cells.length - 1);
+  spawnGoat(x, y) {
+    const startX = x ? x : Random.intFromInterval(0, this.cells.length - 1),
+      startY = y ? y :Random.intFromInterval(0, this.cells.length - 1);
     console.log(`Creating goat at ${startX},${startY}`);
     this.goats.push(new Goat(this.cells.length, startX, startY));
   }
 
   moveGoats() {
-    return this.goats.map(goat => goat.move()).filter(delta => delta);
+    return this.goats.map(goat => {
+      goat.eat(this.cells[goat.position.x][goat.position.y]);
+      return goat.move();
+    }).filter(delta => delta);
   }
 
   growGrass() {

@@ -1,7 +1,6 @@
 'use strict';
 var Board = require('./board');
 
-
 class World {
   constructor (size) {
     this.age = 0;
@@ -19,8 +18,8 @@ class World {
     };
   }
 
-  spawnGoat() {
-    this.board.spawnGoat();
+  spawnGoat(x, y) {
+    this.board.spawnGoat(x, y);
   }
 }
 
