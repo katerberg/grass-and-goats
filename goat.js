@@ -29,18 +29,26 @@ class Goat {
     world.board.goats[newGoat.id] = newGoat;
   }
 
+  tick(cell) {
+    this.metabolize();
+    if (cell.grass > 0) {
+      return this.eat(cell);
+    } else {
+      return this.move();
+    }
+  }
+
   eat(cell) {
-    this.stomach += cell.grass;
+    this.stomach += 0.5;
     if (this.stomach >= 20) {
       this.stomach = 5;
       this.reproduce(cell);
     }
-    // console.log(`goat ${this.id} has eaten ${this.stomach}`);
-    cell.grass = 0;
+    cell.grass -= 0.5;
   }
 
   metabolize() {
-    this.stomach -= 0.1;
+    this.stomach -= 0.2;
     if (this.stomach <= 0) {
       delete(state().board.goats[this.id]);
     }
@@ -51,10 +59,10 @@ class Goat {
     this.formerPosition.y = this.position.y;
     this.position.x += Random.intFromInterval(-1, 1);
     this.position.y += Random.intFromInterval(-1, 1);
-    if (this.position.x <= 0) {
+    if (this.position.x < 0) {
       this.position.x++;
     }
-    if (this.position.y <= 0) {
+    if (this.position.y < 0) {
       this.position.y++;
     }
     if (this.position.x >= this.constraint) {
@@ -63,7 +71,6 @@ class Goat {
     if (this.position.y >= this.constraint) {
       this.position.y--;
     }
-    this.metabolize();
     if (this.formerPosition.x !== this.position.x || this.formerPosition.y !== this.position.y || this.stomach <= 0) {
       return this;
     }

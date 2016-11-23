@@ -4,6 +4,7 @@
     "prestart": "cp node_modules/socket.io-client/socket.io.js public/lib/ && cp node_modules/jquery/dist/jquery.min.js public/lib/jquery.js"
   },
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "jquery": "^3.1.1",
     "socket.io": "^1.5.1"

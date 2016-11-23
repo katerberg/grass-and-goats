@@ -5,16 +5,16 @@
 
   socket.on('tick', function(worldChanges) {
     worldChanges.goats.forEach(function(goat) {
-      if (goat.formerPosition.x) {
-        var row = $($('#board').children()[goat.formerPosition.x]);
-        var cell = $(row.children()[goat.formerPosition.y]);
-        cell.css('background-color', 'rgb(255,255,255)');
-      }
+      var row = $($('#board').children()[goat.formerPosition.x]);
+      var cell = $(row.children()[goat.formerPosition.y]);
+      cell.css('background-color', 'rgb(255,255,255)');
     });
     worldChanges.grass.forEach(function(cellChange) {
       var row = $($('#board').children()[cellChange.x]);
       var cell = $(row.children()[cellChange.y]);
-      cell.css('background-color', getBackgroundColor(cellChange.grass));
+      if (cell.css('background-color')+'' != 'rgb(255, 0, 0)') {
+        cell.css('background-color', getBackgroundColor(cellChange.grass));
+      }
     });
     worldChanges.goats.forEach(function(goat) {
       if (goat.stomach > 0) {

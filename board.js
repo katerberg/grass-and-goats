@@ -31,8 +31,7 @@ class Board {
   moveGoats() {
     return Object.keys(this.goats)
       .map(value => this.goats[value]).map(goat => {
-        goat.eat(this.cells[goat.position.x][goat.position.y]);
-        return goat.move();
+        return goat.tick(this.cells[goat.position.x][goat.position.y]);
       }).filter(delta => delta);
   }
 

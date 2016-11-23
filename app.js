@@ -2,7 +2,10 @@
   'use strict';
   const express = require('express');
   const app = express();
+  const bodyParser = require('body-parser');
   app.use(express.static('public'));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({extended: true}));
   const http = require('http').Server(app);
   const io = require('socket.io')(http);
   const port = process.env.PORT || 3000;
@@ -17,6 +20,17 @@
   app.get('/age', function(req, res) {
     console.log('requesting age');
     res.send(state.age + '');
+  });
+
+  app.post('/spawn', function(req, res) {
+    if (req.body && req.body.type) {
+      if (req.body.type === 'goat') {
+        state.spawnGoat();
+        res.send('created');
+      }
+    } else {
+      res.status(400).send('requires type of spawn');
+    }
   });
 
   app.get('/world', function(req, res) {
