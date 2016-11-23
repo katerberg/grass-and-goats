@@ -31,7 +31,7 @@ class Goat {
 
   eat(cell) {
     this.stomach += cell.grass;
-    if (this.stomach >= 10) {
+    if (this.stomach >= 20) {
       this.stomach = 5;
       this.reproduce(cell);
     }
