@@ -4,9 +4,22 @@
   var socket = io();
 
   socket.on('tick', function(worldChanges) {
-    worldChanges.forEach(function(change) {
-      var row = $($('#board').children()[change.x]);
-      $(row.children()[change.y]).css('background-color', getBackgroundColor(change.grass));
+    worldChanges.goats.forEach(function(goat) {
+      if (goat.formerPosition.x) {
+        console.log(goat.formerPosition.x);
+        console.log(goat.formerPosition.y);
+        var row = $($('#board').children()[goat.formerPosition.x]);
+        $(row.children()[goat.formerPosition.y]).css('background-color', 'rgb(255,255,255)');
+      }
+    });
+    worldChanges.grass.forEach(function(cellChange) {
+      var row = $($('#board').children()[cellChange.x]);
+      $(row.children()[cellChange.y]).css('background-color', getBackgroundColor(cellChange.grass));
+    });
+    worldChanges.goats.forEach(function(goat) {
+      console.log('goat moving to ' + goat.position.x + ',' + goat.position.y);
+      var row = $($('#board').children()[goat.position.x]);
+      $(row.children()[goat.position.y]).css('background-color', 'rgb(255,0,0)');
     });
   });
   

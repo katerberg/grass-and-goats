@@ -8,7 +8,7 @@
   const World = require('./world');
   const port = process.env.PORT || 3000;
 
-  const world = new World(30);
+  const world = new World(60);
 
   app.get('/', function(req, res) {
     console.log('got called on base');
@@ -26,10 +26,14 @@
   });
 
   function tick(ageUntil) {
+    var worldTick = world.tick();
     world.watchers.forEach(function(watcher) {
-      watcher.emit('tick', world.tick());
+      watcher.emit('tick', worldTick);
     });
-    if (world.age < ageUntil) {
+    if (world.age <= ageUntil) {
+      if (world.age == ageUntil) {
+        world.spawnGoat();
+      }
       tick(ageUntil);
     } else {
       setTimeout(tick, 1000);
@@ -39,7 +43,7 @@
   function kickoffTicker(socket) {
     world.watchers.push(socket);
     if (!world.age) {
-      tick(500);
+      tick(200);
     }
   }
 

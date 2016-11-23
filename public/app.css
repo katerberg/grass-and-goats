@@ -4,16 +4,16 @@ html, body {
 }
 #board {
   height: 100%;
-  overflow: auto;
+  width: 100%;
 }
 #board > .row {
   margin: 0;
   padding: 0;
-  height: 1em;
+  height: 0.5em;
 }
 #board > .row > .cell {
-  width: 1em;
-  height: 1em;
+  width: 0.5em;
+  height: 0.5em;
   border: 1px solid #ddd;
   display: inline-block;
   margin: 0;

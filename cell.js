@@ -8,13 +8,9 @@ class Cell {
   }
 
   grassSurrounding(neighbors) {
-    const amountSurroung = neighbors.reduce((sum, neighbor) => {
+    return neighbors.reduce((sum, neighbor) => {
       return sum + neighbor.grass;
     }, 0);
-    if (amountSurroung > 10) {
-      // console.log(amountSurroung);
-    }
-    return amountSurroung;
   }
 
   becomesColonized(neighbors) {
@@ -22,7 +18,7 @@ class Cell {
   }
 
   naturalGrowth(neighbors) {
-    let growth = (0.01 + Math.random()) * 0.045;
+    let growth = (0.01 + Math.random()) * 0.05;
     let overpopulation = this.grassSurrounding(neighbors) * 0.01;
     return growth - overpopulation;
   }

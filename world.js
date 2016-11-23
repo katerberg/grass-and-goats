@@ -11,7 +11,16 @@ class World {
 
   tick() {
     this.age++;
-    return this.board.growGrass();
+    const grassDelta = this.board.growGrass();
+    const goatsDelta = this.board.moveGoats();
+    return {
+      grass: grassDelta,
+      goats: goatsDelta,
+    };
+  }
+
+  spawnGoat() {
+    this.board.spawnGoat();
   }
 }
 
