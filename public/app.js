@@ -6,20 +6,24 @@
   socket.on('tick', function(worldChanges) {
     worldChanges.goats.forEach(function(goat) {
       if (goat.formerPosition.x) {
-        console.log(goat.formerPosition.x);
-        console.log(goat.formerPosition.y);
         var row = $($('#board').children()[goat.formerPosition.x]);
-        $(row.children()[goat.formerPosition.y]).css('background-color', 'rgb(255,255,255)');
+        var cell = $(row.children()[goat.formerPosition.y]);
+        cell.css('background-color', 'rgb(255,255,255)');
       }
     });
     worldChanges.grass.forEach(function(cellChange) {
       var row = $($('#board').children()[cellChange.x]);
-      $(row.children()[cellChange.y]).css('background-color', getBackgroundColor(cellChange.grass));
+      var cell = $(row.children()[cellChange.y]);
+      cell.css('background-color', getBackgroundColor(cellChange.grass));
     });
     worldChanges.goats.forEach(function(goat) {
-      console.log('goat moving to ' + goat.position.x + ',' + goat.position.y);
-      var row = $($('#board').children()[goat.position.x]);
-      $(row.children()[goat.position.y]).css('background-color', 'rgb(255,0,0)');
+      if (goat.stomach > 0) {
+        var row = $($('#board').children()[goat.position.x]);
+        var cell = $(row.children()[goat.position.y]);
+        cell.css('background-color', 'rgb(255,0,0)');
+      } else {
+        console.log('killing goat' + JSON.stringify(goat));
+      }
     });
   });
   

@@ -13,7 +13,7 @@ function tick(ageUntil) {
     }
     tick(ageUntil);
   } else {
-    setTimeout(tick, 1000);
+    setTimeout(tick, 100);
   }
 }
 
