@@ -6,6 +6,7 @@ class World {
     this.age = 0;
     this.watchers = [];
     this.board = new Board(size);
+    this.TICK_TIME = 100;
   }
 
   tick() {

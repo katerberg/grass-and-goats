@@ -25,11 +25,23 @@
   app.post('/spawn', function(req, res) {
     if (req.body && req.body.type) {
       if (req.body.type === 'goat') {
+        console.log('spawning new goat');
         state.spawnGoat();
         res.send('created');
       }
     } else {
       res.status(400).send('requires type of spawn');
+    }
+  });
+
+  app.patch('/config', function(req, res) {
+    if (req.body && req.body.TICK_TIME) {
+      const tickTime = req.body.TICK_TIME;
+      console.log('Changing config tick time to ' + tickTime);
+      state.TICK_TIME = tickTime;
+      res.send({TICK_TIME: tickTime});
+    } else {
+      res.status(400).send('requires TICK_TIME to update');
     }
   });
 
